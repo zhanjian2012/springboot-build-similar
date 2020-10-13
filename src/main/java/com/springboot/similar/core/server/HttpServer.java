@@ -1,4 +1,4 @@
-package com.springboot.similar.core;
+package com.springboot.similar.core.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;

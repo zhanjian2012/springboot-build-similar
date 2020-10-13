@@ -1,6 +1,7 @@
 package com.springboot.similar.core;
 
 import com.springboot.similar.common.Banner;
+import com.springboot.similar.core.server.HttpServer;
 import com.springboot.similar.factory.BeanFactory;
 import com.springboot.similar.factory.RouteFactory;
 import lombok.SneakyThrows;
@@ -18,10 +19,16 @@ public class ApplicationContext {
         // 2.路由信息加载
         RouteFactory.loadAllUri(PACKAGE_PATH);
 
+        // 3.注入
+
+        // 4.banner显示
         System.out.println(Banner.banner);
+
+
 
         // 8081为启动端口
         HttpServer server = new HttpServer(8081);
         server.start();
     }
+
 }

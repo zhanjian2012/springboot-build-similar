@@ -1,5 +1,6 @@
-package com.springboot.similar.core;
+package com.springboot.similar.core.server;
 
+import com.google.gson.Gson;
 import com.springboot.similar.core.handler.GetMappingHandler;
 import com.springboot.similar.core.handler.MappingHandler;
 import io.netty.buffer.Unpooled;
@@ -24,7 +25,7 @@ public class HttpRequestHandler extends SimpleChannelInboundHandler<FullHttpRequ
             FullHttpResponse response = new DefaultFullHttpResponse(
                     HttpVersion.HTTP_1_1,
                     HttpResponseStatus.OK,
-                    Unpooled.copiedBuffer(handler + "", CharsetUtil.UTF_8));
+                    Unpooled.wrappedBuffer(new Gson().toJson(handler).getBytes()));
             // 设置头信息
             response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html; charset=UTF-8");
             // 将html write到客户端

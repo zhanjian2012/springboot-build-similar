@@ -1,4 +1,4 @@
-package com.springboot.similar.core;
+package com.springboot.similar.core.server;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
