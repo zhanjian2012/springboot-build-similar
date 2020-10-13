@@ -1,12 +1,13 @@
 package com.springboot.similar.core;
 
+import com.springboot.similar.common.Banner;
 import com.springboot.similar.factory.BeanFactory;
 import com.springboot.similar.factory.RouteFactory;
 import lombok.SneakyThrows;
 
 public class ApplicationContext {
 
-    private static final String PACKAGE_PATH = "com.netty";
+    private static final String PACKAGE_PATH = "com.springboot.similar";
 
     @SneakyThrows
     public static void run() {
@@ -16,6 +17,8 @@ public class ApplicationContext {
 
         // 2.路由信息加载
         RouteFactory.loadAllUri(PACKAGE_PATH);
+
+        System.out.println(Banner.banner);
 
         // 8081为启动端口
         HttpServer server = new HttpServer(8081);

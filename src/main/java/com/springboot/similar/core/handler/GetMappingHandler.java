@@ -11,13 +11,13 @@ import java.util.List;
 
 public class GetMappingHandler implements MappingHandler {
 
-    private static Object[] buildParamters(FullHttpRequest request) {
+    private static Object[] buildParameters(FullHttpRequest request) {
         List<Object> objectList = new ArrayList<>();
         String uri = request.uri();
         if (uri.contains("?")) {
             String split = uri.split("\\?")[1];
             if (split.contains("&")) {
-                for(String param : split.split("&")) {
+                for (String param : split.split("&")) {
                     String s = param.split("=")[1];
                     objectList.add(s);
                 }
@@ -36,7 +36,7 @@ public class GetMappingHandler implements MappingHandler {
         if (routeDetail == null) {
             return null;
         }
-        buildParamters(request);
-        return routeDetail.getMethod().invoke(BeanFactory.getBean(routeDetail.getClassName()), buildParamters(request));
+        return routeDetail.getMethod().invoke(BeanFactory.getBean(routeDetail.getClassName()), buildParameters(request));
     }
+
 }
