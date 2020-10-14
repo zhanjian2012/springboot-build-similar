@@ -53,18 +53,14 @@ public final class BeanFactory {
                                     if (inter.isAssignableFrom(type)) {
                                         field.setAccessible(true);
                                         field.set(instance, getBean(s.getName()));
-//                                        field.set(instance, s.newInstance());
                                     }
                                 }
                             }
                         } else {
                             field.setAccessible(true);
                             String name = field.getType().getName();
-                            System.out.println("-----" + name);
-                            Object bean = getBean(name);
-                            field.set(instance, bean);
+                            field.set(instance, getBean(name));
                         }
-
                     }
                 }
             }
@@ -73,6 +69,11 @@ public final class BeanFactory {
         }
     }
 
+    /**
+     * 获取bean
+     * @param className 类名
+     * @return Object
+     */
     public static Object getBean(String className) {
         return BEAN_MAP.get(className);
     }
