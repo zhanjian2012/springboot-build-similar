@@ -17,64 +17,64 @@ import java.util.Set;
  */
 public final class BeanFactory {
 
-    public static final Map<String, Object> beanMap = new HashMap<String, Object>();
+    private static Map<String, Object> BEAN_MAP = new HashMap<>();
 
     public static void loadAllBeans(String packagePath) {
         Set<Class<?>> restControllerSet = RefectUtils.scanClass(packagePath, RestController.class);
         Set<Class<?>> componentSet = RefectUtils.scanClass(packagePath, Compnent.class);
-
-        Set<Class<?>> ServiceSet = RefectUtils.scanClass(packagePath, Service.class);
+        if (CollectionUtils.isNotEmpty(componentSet)) {
+            for (Class<?> clazz : componentSet) {
+                BEAN_MAP.put(clazz.getName(), RefectUtils.getInstance(clazz));
+            }
+        }
+        if (CollectionUtils.isNotEmpty(restControllerSet)) {
+            for (Class<?> clazz : restControllerSet) {
+                BEAN_MAP.put(clazz.getName(), RefectUtils.getInstance(clazz));
+            }
+        }
+        Set<Class<?>> serviceSet = RefectUtils.scanClass(packagePath, Service.class);
+        if (CollectionUtils.isNotEmpty(serviceSet)) {
+            for (Class<?> clazz : serviceSet) {
+                BEAN_MAP.put(clazz.getName(), RefectUtils.getInstance(clazz));
+            }
+        }
         try {
-            if (CollectionUtils.isNotEmpty(restControllerSet)) {
-                for (Class<?> clazz : restControllerSet) {
-                    Object instance = RefectUtils.getInstance(clazz);
-                    beanMap.put(clazz.getName(), instance);
-
-                    Field[] fields = clazz.getDeclaredFields();
-                    if (fields != null) {
-                        for (Field field : fields) {
-
-                            Autowired annotation = field.getAnnotation(Autowired.class);
-                            if (annotation != null) {
-                                Class<?> type = field.getType();
-
-                                for (Class s : ServiceSet) {
-                                    Class<?>[] interfaces = s.getInterfaces();
-                                    for (Class inter : interfaces) {
-                                        if (inter.isAssignableFrom(type)) {
-                                            field.setAccessible(true);
-                                            field.set(instance, s.newInstance());
-                                        }
+            for (String key : BEAN_MAP.keySet()) {
+                Object instance = BEAN_MAP.get(key);
+                Field[] fields = instance.getClass().getDeclaredFields();
+                for (Field field : fields) {
+                    Autowired annotation = field.getAnnotation(Autowired.class);
+                    if (annotation != null) {
+                        Class<?> type = field.getType();
+                        if (type.isInterface()) {
+                            for (Class s : serviceSet) {
+                                Class<?>[] interfaces = s.getInterfaces();
+                                for (Class inter : interfaces) {
+                                    if (inter.isAssignableFrom(type)) {
+                                        field.setAccessible(true);
+                                        field.set(instance, getBean(s.getName()));
+//                                        field.set(instance, s.newInstance());
                                     }
                                 }
                             }
+                        } else {
+                            field.setAccessible(true);
+                            String name = field.getType().getName();
+                            System.out.println("-----" + name);
+                            Object bean = getBean(name);
+                            field.set(instance, bean);
                         }
+
                     }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (CollectionUtils.isNotEmpty(componentSet)) {
-            for (Class<?> clazz : componentSet) {
-                beanMap.put(clazz.getName(), RefectUtils.getInstance(clazz));
-            }
-        }
-
-        if (CollectionUtils.isNotEmpty(ServiceSet)) {
-            for (Class<?> clazz : ServiceSet) {
-                beanMap.put(clazz.getName(), RefectUtils.getInstance(clazz));
-            }
-        }
     }
 
     public static Object getBean(String className) {
-        return beanMap.get(className);
+        return BEAN_MAP.get(className);
     }
-
-    public static void main(String[] args) {
-        loadAllBeans("com.netty");
-    }
-
 
 }

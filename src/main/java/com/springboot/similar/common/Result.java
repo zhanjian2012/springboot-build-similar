@@ -39,6 +39,15 @@ public class Result<T> {
         return result;
     }
 
+    public static <T> Result ok(T data) {
+        Result result = new Result();
+        result.setCode(200);
+        result.setMsg("操作成功");
+        result.setData(data);
+        return result;
+    }
+
+
 
     public static Result error(int code, String msg) {
         Result result = new Result();

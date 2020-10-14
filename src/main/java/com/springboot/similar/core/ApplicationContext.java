@@ -22,7 +22,7 @@ public class ApplicationContext {
         // 3.注入
 
         // 4.banner显示
-        System.out.println(Banner.banner);
+//        System.out.println(Banner.banner);
 
 
 

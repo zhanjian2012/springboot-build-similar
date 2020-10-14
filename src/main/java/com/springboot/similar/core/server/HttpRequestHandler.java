@@ -1,6 +1,7 @@
 package com.springboot.similar.core.server;
 
 import com.google.gson.Gson;
+import com.springboot.similar.common.Result;
 import com.springboot.similar.core.handler.GetMappingHandler;
 import com.springboot.similar.core.handler.MappingHandler;
 import io.netty.buffer.Unpooled;
@@ -22,6 +23,9 @@ public class HttpRequestHandler extends SimpleChannelInboundHandler<FullHttpRequ
         if (req.method().name().equals(HttpMethod.GET.name())) {
             MappingHandler mappingHandler = new GetMappingHandler();
             Object handler = mappingHandler.handler(req);
+            if(handler == null) {
+                handler = Result.error(500, "服务器内部错误");
+            }
             FullHttpResponse response = new DefaultFullHttpResponse(
                     HttpVersion.HTTP_1_1,
                     HttpResponseStatus.OK,

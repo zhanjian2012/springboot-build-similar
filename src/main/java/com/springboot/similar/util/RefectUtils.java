@@ -14,6 +14,12 @@ public class RefectUtils {
         return reflections.getTypesAnnotatedWith(annotation, true);
     }
 
+
+    public static <T> Set<Class<? extends T>> scanSubClass(String packageName, Class<T> interfaceClass) {
+        Reflections reflections = new Reflections(packageName);
+        return reflections.getSubTypesOf(interfaceClass);
+    }
+
     public static Object getInstance(Class<?> clazz) {
         Object instance = null;
         try {
