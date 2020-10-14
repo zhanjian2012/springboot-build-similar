@@ -17,7 +17,7 @@ import java.util.Set;
  */
 public final class BeanFactory {
 
-    private static Map<String, Object> BEAN_MAP = new HashMap<>();
+    private static final Map<String, Object> BEAN_MAP = new HashMap<>();
 
     public static void loadAllBeans(String packagePath) {
         Set<Class<?>> restControllerSet = RefectUtils.scanClass(packagePath, RestController.class);

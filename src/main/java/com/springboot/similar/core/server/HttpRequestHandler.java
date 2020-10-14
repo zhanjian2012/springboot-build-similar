@@ -22,7 +22,12 @@ public class HttpRequestHandler extends SimpleChannelInboundHandler<FullHttpRequ
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest req) throws Exception {
         if (req.method().name().equals(HttpMethod.GET.name())) {
             MappingHandler mappingHandler = new GetMappingHandler();
-            Object handler = mappingHandler.handler(req);
+            Object handler = null;
+            try {
+                handler = mappingHandler.handler(req);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             if(handler == null) {
                 handler = Result.error(500, "服务器内部错误");
             }
