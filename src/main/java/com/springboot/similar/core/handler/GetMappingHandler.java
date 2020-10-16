@@ -3,9 +3,14 @@ package com.springboot.similar.core.handler;
 import com.springboot.similar.core.entity.RouteDetail;
 import com.springboot.similar.factory.BeanFactory;
 import com.springboot.similar.factory.RouteFactory;
+import com.springboot.similar.intercept.MethodInterceptor;
+import com.springboot.similar.intercept.ParameterValidateInterceptor;
+import com.springboot.similar.intercept.ParameterValidateInterceptor1;
+import com.springboot.similar.intercept.method.MethodInvocation;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpMethod;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +41,12 @@ public class GetMappingHandler implements MappingHandler {
         if (routeDetail == null) {
             return null;
         }
-        return routeDetail.getMethod().invoke(BeanFactory.getBean(routeDetail.getClassName()), buildParameters(request));
+        MethodInterceptor interceptor = new ParameterValidateInterceptor();
+        MethodInvocation methodInvocation = new MethodInvocation(routeDetail.getMethod(), buildParameters(request));
+        Object o = interceptor.intercept(methodInvocation);
+        MethodInterceptor interceptor1 = new ParameterValidateInterceptor1();
+        return interceptor1.intercept(methodInvocation);
+//        return routeDetail.getMethod().invoke(BeanFactory.getBean(routeDetail.getClassName()), buildParameters(request));
     }
 
 }
